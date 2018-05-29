@@ -1,0 +1,27 @@
+#!/usr/bin/with-contenv bash
+
+PUID=${PUID:-1001}
+PGID=${PGID:-1001}
+
+CUR_PUID=`cat "/etc/passwd" | grep abc | cut -f3 -d':'`
+CUR_PGID=`cat "/etc/passwd" | grep abc | cut -f4 -d':'`
+
+[ "$CUR_PGID" != "$PGID" ] && groupmod -o -g "$PGID" abc
+[ "$CUR_PUID" != "$PUID" ] && usermod -o -u "$PUID" abc
+
+echo '
+-------------------------------------
+GID/UID
+-------------------------------------'
+echo "
+User uid:    $(id -u abc)
+User gid:    $(id -g abc)
+-------------------------------------
+"
+
+[ -d "/data" ] && chown abc:abc /data
+[ -d "/config" ] && chown abc:abc /config
+
+
+
+
